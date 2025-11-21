@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Photo Effects Studio</title>
+    <link rel="stylesheet" href="styles.css?v=3.5">
+    <!-- Face Detection Library - Load before app.js -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <img src="./assets/Camera_Logo.jpg" alt="Camera Logo" class="header-logo">
+                <h1>Photo Effects Studio</h1>
+            </div>
+            <p>Apply real-time effects with custom overlays</p>
+        </header>
+
+        <!-- Main Layout: Camera + Controls Side by Side -->
+        <div class="main-layout">
+            <!-- Left Side: Camera Feed -->
+            <div class="camera-section">
+                <div class="studio-wrapper">
+                    <!-- Camera Feed (hidden) -->
+                    <video id="video" autoplay playsinline style="display: none !important; position: absolute; left: -9999px;"></video>
+                    
+                    <!-- Canvas for rendering effects -->
+                    <canvas id="canvas" style="display: block !important; width: 100%; height: auto;"></canvas>
+                    
+                    <!-- Error message display -->
+                    <div id="error-message" class="error-message hidden"></div>
+                </div>
+                
+                <!-- Status Display -->
+                <div id="status" class="status">⏳ Initializing camera...</div>
+                
+                <!-- Take Photo Button -->
+                <button id="btn-take-photo" class="camera-take-photo-btn">
+                    📷 Take Photo
+                </button>
+            </div>
+
+            <!-- Right Side: Controls Panel -->
+            <div class="controls-panel">
+            <h2>Effects & Controls</h2>
+            
+            <!-- Filter Buttons -->
+            <div class="filter-buttons">
+                <button id="btn-none" class="filter-btn active" data-filter="none">Original</button>
+                <button id="btn-grayscale" class="filter-btn" data-filter="grayscale">Grayscale</button>
+                <button id="btn-sepia" class="filter-btn" data-filter="sepia">Sepia</button>
+                <button id="btn-invert" class="filter-btn" data-filter="invert">Invert</button>
+                <button id="btn-pixelated" class="filter-btn" data-filter="pixelated">Pixelated</button>
+            </div>
+
+            <!-- Brightness Control -->
+            <div class="slider-control">
+                <label for="brightness">
+                    <span>☀️ Brightness</span>
+                    <span id="brightness-value">100%</span>
+                </label>
+                <input type="range" id="brightness" min="0" max="200" value="100" step="1">
+            </div>
+
+            <!-- Contrast Control -->
+            <div class="slider-control">
+                <label for="contrast">
+                    <span>🎨 Contrast</span>
+                    <span id="contrast-value">100%</span>
+                </label>
+                <input type="range" id="contrast" min="0" max="200" value="100" step="1">
+            </div>
+
+            <!-- Saturation Control -->
+            <div class="slider-control">
+                <label for="saturation">
+                    <span>🌈 Saturation</span>
+                    <span id="saturation-value">100%</span>
+                </label>
+                <input type="range" id="saturation" min="0" max="200" value="100" step="1">
+            </div>
+
+            <!-- Blur Control -->
+            <div class="slider-control">
+                <label for="blur">
+                    <span>💫 Blur</span>
+                    <span id="blur-value">0px</span>
+                </label>
+                <input type="range" id="blur" min="0" max="20" value="0" step="1">
+            </div>
+
+            <!-- Hue Rotate Control -->
+            <div class="slider-control">
+                <label for="hue-rotate">
+                    <span>🎭 Hue Rotate</span>
+                    <span id="hue-rotate-value">0°</span>
+                </label>
+                <input type="range" id="hue-rotate" min="0" max="360" value="0" step="1">
+            </div>
+
+            <!-- Face Detection Status -->
+            <div class="face-detection-section">
+                <div id="face-count" class="face-count hidden">
+                    👤 Faces detected: <span id="face-count-number">0</span>
+                </div>
+            </div>
+
+            <!-- Face Overlays Section -->
+            <div class="face-overlays-section">
+                <h3>😎 Face Overlays</h3>
+                <p class="overlay-hint">Select an overlay to apply to detected faces</p>
+                <div class="overlay-buttons">
+                    <button class="overlay-btn" data-overlay="none">
+                        <span class="overlay-icon">❌</span>
+                        <span>None</span>
+                    </button>
+                    <button class="overlay-btn" data-overlay="mustache">
+                        <span class="overlay-icon">👨</span>
+                        <span>Mustache</span>
+                    </button>
+                    <button class="overlay-btn" data-overlay="glasses">
+                        <span class="overlay-icon">🕶️</span>
+                        <span>Glasses</span>
+                    </button>
+                    <button class="overlay-btn" data-overlay="hat">
+                        <span class="overlay-icon">🎩</span>
+                        <span>Party Hat</span>
+                    </button>
+                    <button class="overlay-btn" data-overlay="all">
+                        <span class="overlay-icon">🤡</span>
+                        <span>All</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button id="btn-reset" class="action-btn secondary" style="width: 100%;">
+                    🔄 Reset Filters
+                </button>
+            </div>
+            </div>
+            <!-- End Controls Panel -->
+        </div>
+        <!-- End Main Layout -->
+    </div>
+
+    <!-- Photo Preview Modal -->
+    <div id="preview-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>📸 Photo Preview</h2>
+            <div class="preview-image-container">
+                <img id="preview-image" src="" alt="Photo preview">
+            </div>
+            <div class="modal-actions">
+                <button id="btn-download" class="modal-btn download-btn">
+                    💾 Download
+                </button>
+                <button id="btn-discard" class="modal-btn discard-btn">
+                    🗑️ Discard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=2.9"></script>
+</body>
+</html>

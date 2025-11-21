@@ -1,0 +1,41 @@
+<svg width="250" height="150" viewBox="0 0 250 150" xmlns="http://www.w3.org/2000/svg">
+  <!-- Party hat -->
+  <defs>
+    <linearGradient id="hatGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ee5a6f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c44569;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="hatShadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  
+  <!-- Hat cone -->
+  <path d="M 125,10 L 50,120 L 200,120 Z" 
+        fill="url(#hatGradient)" 
+        stroke="#a83256" 
+        stroke-width="2"
+        filter="url(#hatShadow)"/>
+  
+  <!-- Stripes -->
+  <path d="M 125,40 L 70,120 L 180,120 Z" 
+        fill="none" 
+        stroke="#ffd93d" 
+        stroke-width="3"/>
+  
+  <path d="M 125,70 L 90,120 L 160,120 Z" 
+        fill="none" 
+        stroke="#ffd93d" 
+        stroke-width="3"/>
+  
+  <!-- Pom-pom on top -->
+  <circle cx="125" cy="10" r="8" fill="#ffd93d" stroke="#f9ca24" stroke-width="1"/>
+  
+  <!-- Hat brim -->
+  <ellipse cx="125" cy="120" rx="80" ry="12" 
+           fill="#c44569" 
+           stroke="#a83256" 
+           stroke-width="2"/>
+</svg>
